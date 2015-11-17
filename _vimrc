@@ -34,9 +34,11 @@ NeoBundle 'Shougo/unite-outline'
 NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle "t9md/vim-quickhl"
+NeoBundle 'ervandew/supertab'
 
 call neobundle#end()
 
+let g:SuperTabDefaultCompletionType = "context"
 set nocompatible
 set statusline+=%{fugitive#statusline()}
 
