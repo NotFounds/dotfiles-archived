@@ -31,8 +31,19 @@ NeoBundle 'Shougo/neosnippet'
 NeoBundle 'Shougo/neosnippet-snippets'
 NeoBundleLazy 'kana/vim-altr'
 NeoBundle 'Shougo/unite-outline'
+NeoBundle 'scrooloose/nerdtree'
+NeoBundle 'tpope/vim-fugitive'
+NeoBundle "t9md/vim-quickhl"
 
 call neobundle#end()
+
+set nocompatible
+set statusline+=%{fugitive#statusline()}
+
+nmap <Space>m <Plug>(quickhl-manual-this)
+xmap <Space>m <Plug>(quickhl-manual-this)
+nmap <Space>M <Plug>(quickhl-manual-reset)
+xmap <Space>M <Plug>(quickhl-manual-reset)
 
 " Required:
 filetype plugin indent on
@@ -112,3 +123,47 @@ let g:jedi#popup_select_first = 0
 let g:jedi#rename_command = '<Leader>R'
 
 autocmd BufNewFile,BufRead *.es6 set filetype=javascript
+
+" https://sites.google.com/site/fudist/Home/vim-nihongo-ban/-vimrc-sample
+""""""""""""""""""""""""""""""
+" 挿入モード時、ステータスラインの色を変更
+""""""""""""""""""""""""""""""
+let g:hi_insert = 'highlight StatusLine guifg=darkblue guibg=darkyellow gui=none ctermfg=blue ctermbg=yellow cterm=none'
+
+if has('syntax')
+  augroup InsertHook
+    autocmd!
+    autocmd InsertEnter * call s:StatusLine('Enter')
+    autocmd InsertLeave * call s:StatusLine('Leave')
+  augroup END
+endif
+
+let s:slhlcmd = ''
+function! s:StatusLine(mode)
+  if a:mode == 'Enter'
+    silent! let s:slhlcmd = 'highlight ' . s:GetHighlight('StatusLine')
+    silent exec g:hi_insert
+  else
+    highlight clear StatusLine
+    silent exec s:slhlcmd
+  endif
+endfunction
+
+function! s:GetHighlight(hi)
+  redir => hl
+  exec 'highlight '.a:hi
+  redir END
+  let hl = substitute(hl, '[\r\n]', '', 'g')
+  let hl = substitute(hl, 'xxx', '', '')
+  return hl
+endfunction
+""""""""""""""""""""""""""""""
+
+NeoBundleLazy 'nosami/Omnisharp', {
+\   'autoload': {'filetypes': ['cs']},
+\   'build': {
+\     'windows': 'MSBuild.exe server/OmniSharp.sln /p:Platform="Any CPU"',
+\     'mac': 'xbuild server/OmniSharp.sln',
+\     'unix': 'xbuild server/OmniSharp.sln',
+\   }
+\ }
