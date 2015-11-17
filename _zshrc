@@ -89,6 +89,9 @@ alias gl="git log"
 alias glo="git log --oneline"
 alias gb="git branch"
 alias gba="git branch -a"
+alias glog="git log --graph --decorate --oneline"
+alias gls="git log -p"
+alias gls="git log --stat"
 function restart(){
 	exec $SHELL -l
 }
