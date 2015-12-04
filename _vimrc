@@ -35,12 +35,29 @@ NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle "t9md/vim-quickhl"
 NeoBundle 'ervandew/supertab'
-
+NeoBundle 'altercation/vim-colors-solarized'
+NeoBundle 'bling/vim-airline'
+NeoBundleLazy 'nosami/Omnisharp', {
+\   'autoload': {'filetypes': ['cs']},
+\   'build': {
+\     'windows': 'MSBuild.exe server/OmniSharp.sln /p:Platform="Any CPU"',
+\     'mac': 'xbuild server/OmniSharp.sln',
+\     'unix': 'xbuild server/OmniSharp.sln',
+\   }
+\ }
+NeoBundle 'alpaca-tc/alpaca_powertabline'
+NeoBundle 'Lokaltog/powerline', { 'rtp' : 'powerline/bindings/vim'}
+NeoBundle 'Lokaltog/powerline-fontpatcher'
+NeoBundle 'ryo33/powerful-type.vim'
 call neobundle#end()
 
 let g:SuperTabDefaultCompletionType = "context"
 set nocompatible
-set statusline+=%{fugitive#statusline()}
+"set statusline+=%{fugitive#statusline()}
+
+let g:airline_powerline_fonts = 1
+let g:Powerline_symbol = 'fancy'
+let g:airline_theme='papercolor'
 
 nmap <Space>m <Plug>(quickhl-manual-this)
 xmap <Space>m <Plug>(quickhl-manual-this)
@@ -54,9 +71,9 @@ NeoBundleCheck
 "/NeoBundle
 :let erlang_force_use_vimerl_indent = 0
 autocmd FileType erlang setl tabstop=8 expandtab shiftwidth=2 softtabstop=2
-
 autocmd FileType go setl tabstop=4 expandtab shiftwidth=4 softtabstop=4
 
+"colorscheme solarized
 colorscheme hybrid
 syntax enable
 set background=dark
@@ -103,7 +120,11 @@ set textwidth=0
 set listchars=tab:»-,trail:-,extends:»,precedes:«,nbsp:%,eol:↲
 set virtualedit=all
 set cursorline
-hi clear CursorLine
+set laststatus=2
+set guifont=Menlo\ for\ Powerline:h15
+"set guifont=Ricty_for_Powerline:h10
+"set guifont=Meslo\ LG\ M\ Regular\ for\ Powerline:h15
+"hi clear CursorLine
 
 autocmd FileType python setl autoindent
 autocmd FileType python setl smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class
@@ -126,46 +147,5 @@ let g:jedi#rename_command = '<Leader>R'
 
 autocmd BufNewFile,BufRead *.es6 set filetype=javascript
 
-" https://sites.google.com/site/fudist/Home/vim-nihongo-ban/-vimrc-sample
-""""""""""""""""""""""""""""""
-" 挿入モード時、ステータスラインの色を変更
-""""""""""""""""""""""""""""""
-let g:hi_insert = 'highlight StatusLine guifg=darkblue guibg=darkyellow gui=none ctermfg=blue ctermbg=yellow cterm=none'
 
-if has('syntax')
-  augroup InsertHook
-    autocmd!
-    autocmd InsertEnter * call s:StatusLine('Enter')
-    autocmd InsertLeave * call s:StatusLine('Leave')
-  augroup END
-endif
 
-let s:slhlcmd = ''
-function! s:StatusLine(mode)
-  if a:mode == 'Enter'
-    silent! let s:slhlcmd = 'highlight ' . s:GetHighlight('StatusLine')
-    silent exec g:hi_insert
-  else
-    highlight clear StatusLine
-    silent exec s:slhlcmd
-  endif
-endfunction
-
-function! s:GetHighlight(hi)
-  redir => hl
-  exec 'highlight '.a:hi
-  redir END
-  let hl = substitute(hl, '[\r\n]', '', 'g')
-  let hl = substitute(hl, 'xxx', '', '')
-  return hl
-endfunction
-""""""""""""""""""""""""""""""
-
-NeoBundleLazy 'nosami/Omnisharp', {
-\   'autoload': {'filetypes': ['cs']},
-\   'build': {
-\     'windows': 'MSBuild.exe server/OmniSharp.sln /p:Platform="Any CPU"',
-\     'mac': 'xbuild server/OmniSharp.sln',
-\     'unix': 'xbuild server/OmniSharp.sln',
-\   }
-\ }
