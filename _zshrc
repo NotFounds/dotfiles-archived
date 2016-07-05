@@ -1,6 +1,7 @@
 # Path to your oh-my-zsh installation.
 export ZSH=/Users/ikedaiori/.oh-my-zsh
-
+export GOPATH=~/go
+export PATH=$PATH:/usr/bin/node:./:$GOPATH/bin:.
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
@@ -49,11 +50,11 @@ ZSH_THEME="agnoster"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git gem pip brew textmate ssh-agent)
+plugins=(git gem pip brew textmate ssh-agent zsh-syntax-highlighting)
 
 # User configuration
 
-export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+export PATH=$PATH:"/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 # export MANPATH="/usr/local/man:$MANPATH"
 
 source $ZSH/oh-my-zsh.sh
@@ -89,10 +90,20 @@ alias gl="git log"
 alias glo="git log --oneline"
 alias gb="git branch"
 alias gba="git branch -a"
-alias glog="git log --graph --decorate --oneline"
+alias gsbg="git show-branch | grep '*' | grep -v "$(git rev-parse --abbrev-ref HEAD)" | head -1 | awk -F'[]~^[]' '{print $2}'"
+alias glog="git log --graph --relative-date --oneline"
+alias glogn="git log --graph --name-status --pretty=format:'%C(red)%h %C(green)%an %Creset%s %C(yellow)%d%Creset'"
 alias gls="git log -p"
 alias gls="git log --stat"
+alias diff='colordiff -u'
 function restart(){
 	exec $SHELL -l
 }
 alias pandoc_html="pandoc -mathml -s --self-contained -t html5 -c github.css $@"
+
+alias cs="mcs -warn:0 -r:System.Numerics.dll $@"
+alias cpp="g++ -std=c++0x -O2 $@"
+
+pandoc_md_html () {
+ pandoc -f markdown_github+raw_html+fenced_code_attributes-hard_line_breaks --self-contained -s --mathjax -c https://gist.githubusercontent.com/griffin-stewie/9755783/raw/13cf5c04803102d90d2457a39c3a849a2d2cc04b/github.css --template=template.html $@
+}

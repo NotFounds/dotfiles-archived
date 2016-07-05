@@ -11,7 +11,8 @@ endif
 call neobundle#begin(expand('~/.vim/bundle/'))
 
 NeoBundleFetch 'Shougo/neobundle.vim'
-
+NeoBundleLazy 'mxw/vim-jsx', {'autoload': {'filetypes': ['javascript']}}
+NeoBundleLazy 'pangloss/vim-javascript', {'autoload': {'filetypes': ['javascript']}}
 NeoBundle 'davidhalter/jedi-vim'
 NeoBundle 'thinca/vim-quickrun'
 NeoBundle 'nvie/vim-flake8'
@@ -36,6 +37,7 @@ NeoBundle 'tpope/vim-fugitive'
 NeoBundle "t9md/vim-quickhl"
 NeoBundle 'ervandew/supertab'
 NeoBundle 'altercation/vim-colors-solarized'
+NeoBundle 'Shougo/neomru.vim'
 NeoBundle 'bling/vim-airline'
 NeoBundleLazy 'nosami/Omnisharp', {
 \   'autoload': {'filetypes': ['cs']},
@@ -55,6 +57,7 @@ let g:SuperTabDefaultCompletionType = "context"
 set nocompatible
 "set statusline+=%{fugitive#statusline()}
 
+" -- AirLine --
 let g:airline_powerline_fonts = 1
 let g:Powerline_symbol = 'fancy'
 let g:airline_theme='papercolor'
@@ -73,10 +76,22 @@ NeoBundleCheck
 autocmd FileType erlang setl tabstop=8 expandtab shiftwidth=2 softtabstop=2
 autocmd FileType go setl tabstop=4 expandtab shiftwidth=4 softtabstop=4
 
-"colorscheme solarized
+" -- Solarized --
+"set t_Co=256
+"let g:solarized_termtrans=1
+"let g:solarized_termcolors=256 "16
+"let g:solarized_bold=1
+"let g:solarized_underline=1
+"let g:solarized_italic=1
+"let g:solarized_contrast='normal'
+"let g:solarized_visibility='normal'
+
 colorscheme hybrid
-syntax enable
+
+syntax on
 set background=dark
+"let g:solarized_termtrans = 1
+"colorscheme solarized
 
 au BufRead,BufNewFile *.md set filetype=markdown
 let g:previm_open_cmd = 'open -a "Google Chrome"'
@@ -92,7 +107,7 @@ nnoremap <silent> ,uf :<C-u>UniteWithBufferDir -buffer-name=files file<CR>
 nnoremap <silent> ,ur :<C-u>Unite -buffer-name=register register<CR>
 nnoremap <silent> ,uu :<C-u>Unite file_mru buffer<CR>
 nnoremap <silent> ,tabe :<C-u>tabe<CR>:<C-u>UniteWithBufferDir -buffer-name=files file<CR>
-
+nnoremap <silent><C-e> :NERDTreeToggle<CR>
 "vim-altr
 nnoremap <Leader>h <Plug>(altr-forward)
 
@@ -122,14 +137,17 @@ set virtualedit=all
 set cursorline
 set laststatus=2
 set guifont=Menlo\ for\ Powerline:h15
-"set guifont=Ricty_for_Powerline:h10
-"set guifont=Meslo\ LG\ M\ Regular\ for\ Powerline:h15
-"hi clear CursorLine
+hi clear CursorLine
 
 autocmd FileType python setl autoindent
 autocmd FileType python setl smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class
 autocmd FileType python setl tabstop=8 expandtab shiftwidth=4 softtabstop=4
 autocmd FileType python setlocal completeopt-=preview
+
+autocmd FileType javascript.jsx setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
+
+autocmd FileType c++.cpp setl tabstop=4 expandtab shiftwidth=4 softtabstop=4
+
 
 filetype indent plugin on
 set tabstop=4
@@ -137,6 +155,13 @@ set expandtab
 set softtabstop=4
 set shiftwidth=4
 filetype indent on
+
+augroup MyXML
+ autocmd!
+ autocmd Filetype xml inoremap <buffer> </ </<C-x><C-o>
+ autocmd Filetype html inoremap <buffer> </ </<C-x><C-o>
+ autocmd Filetype eruby inoremap <buffer> </ </<C-x><C-o>
+augroup END
 
 let g:indent_guides_enable_on_vim_startup=1
 let g:indent_guides_guide_size=1
@@ -146,6 +171,5 @@ let g:jedi#popup_select_first = 0
 let g:jedi#rename_command = '<Leader>R'
 
 autocmd BufNewFile,BufRead *.es6 set filetype=javascript
-
-
-
+autocmd BufNewFile,BufRead *.js set filetype=javascript.jsx
+autocmd BufNewFile,BufRead *.jsx set filetype=javascript.jsx
