@@ -3,50 +3,47 @@ if &compatible
     set nocompatible
 endif
 set runtimepath+=~/.vim/dein/repos/github.com/Shougo/dein.vim
-let s:dein_dir = expand('~/.cache/dein')
 
 call dein#begin(expand('~/.vim/dein'))
 
 call dein#add('Shougo/dein.vim')
-call dein#add('Shougo/vimproc.vim', 'make')
+call dein#add('Shougo/vimproc.vim', {'build': 'make'})
 
 call dein#add('Shougo/neocomplete.vim')
 call dein#add('Shougo/neomru.vim')
 call dein#add('Shougo/neosnippet')
 
-if dein#load_state(s:dein_dir)
-    " Languages
-    call dein#add('davidhalter/jedi-vim')      " Python
-    call dein#add('nvie/vim-flake8')           " Python
-    call dein#add('elixir-lang/vim-elixir')    " Elixir
-    call dein#add('plasticboy/vim-markdown')   " Markdown
-    call dein#add('jimenezrick/vimerl')        " Erlang
-    call dein#add('othree/yajs.vim')           " Java
-    call dein#add('fatih/vim-go')              " Golang
-    call dein#add('OrangeT/vim-csharp')        " C#
+" Languages
+call dein#add('davidhalter/jedi-vim')      " Python
+call dein#add('nvie/vim-flake8')           " Python
+call dein#add('elixir-lang/vim-elixir')    " Elixir
+call dein#add('plasticboy/vim-markdown')   " Markdown
+call dein#add('jimenezrick/vimerl')        " Erlang
+call dein#add('othree/yajs.vim')           " Java
+call dein#add('fatih/vim-go')              " Golang
+call dein#add('OrangeT/vim-csharp')        " C#
 
-    " Other
-    call dein#add('nathanaelkane/vim-indent-guides')    " visually displaying indent levels
-    call dein#add('thinca/vim-quickrun')
-    call dein#add('vim-airline/vim-airline')            " vim airline
-    call dein#add('vim-airline/vim-airline-themes')     " vim airline
-    call dein#add('ervandew/supertab')                  " allows you to use <Tab> for all your insert completion needs
-    call dein#add('w0ng/vim-hybrid')
-    call dein#add('Shougo/unite-outline')
-    call dein#add('scrooloose/nerdtree')
-    call dein#add('tpope/vim-fugitive')
-    call dein#add('altercation/vim-colors-solarized')
-    call dein#add('t9md/vim-quickhl')
-    call dein#add('Shougo/unite.vim')
-    call dein#add('hokaccha/vim-html5validator')
-    call dein#add('kannokanno/previm')
-    call dein#add('tyru/open-browser.vim')
-    call dein#add('alpaca-tc/alpaca_powertabline')
-    call dein#add('Lokaltog/powerline-fontpatcher')
+" Other
+call dein#add('nathanaelkane/vim-indent-guides')    " visually displaying indent levels
+call dein#add('thinca/vim-quickrun')
+call dein#add('vim-airline/vim-airline')            " vim airline
+call dein#add('vim-airline/vim-airline-themes')     " vim airline
+call dein#add('ervandew/supertab')                  " allows you to use <Tab> for all your insert completion needs
+call dein#add('w0ng/vim-hybrid')
+call dein#add('Shougo/unite-outline')
+call dein#add('scrooloose/nerdtree')
+call dein#add('tpope/vim-fugitive')
+call dein#add('altercation/vim-colors-solarized')
+call dein#add('t9md/vim-quickhl')
+call dein#add('Shougo/unite.vim')
+call dein#add('hokaccha/vim-html5validator')
+call dein#add('kannokanno/previm')
+call dein#add('tyru/open-browser.vim')
+call dein#add('alpaca-tc/alpaca_powertabline')
+call dein#add('Lokaltog/powerline-fontpatcher')
+call dein#add('w0ng/vim-hybrid')
 
 call dein#end()
-call dein#save_state()
-endif
 
 if dein#check_install()
     call dein#install()
