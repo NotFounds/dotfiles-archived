@@ -1,57 +1,59 @@
-"NeoBundle
-if !1 | finish | endif
+" dein
+if &compatible
+    set nocompatible
+endif
+set runtimepath+=~/.vim/dein/repos/github.com/Shougo/dein.vim
+let s:dein_dir = expand('~/.cache/dein')
 
-if has('vim_starting')
-    if &compatible
-        set nocompatible
-    endif
-    set runtimepath+=~/.vim/bundle/neobundle.vim/
+call dein#begin(expand('~/.vim/dein'))
+
+call dein#add('Shougo/dein.vim')
+call dein#add('Shougo/vimproc.vim', 'make')
+
+call dein#add('Shougo/neocomplete.vim')
+call dein#add('Shougo/neomru.vim')
+call dein#add('Shougo/neosnippet')
+
+if dein#load_state(s:dein_dir)
+    " Languages
+    call dein#add('davidhalter/jedi-vim')      " Python
+    call dein#add('nvie/vim-flake8')           " Python
+    call dein#add('elixir-lang/vim-elixir')    " Elixir
+    call dein#add('plasticboy/vim-markdown')   " Markdown
+    call dein#add('jimenezrick/vimerl')        " Erlang
+    call dein#add('othree/yajs.vim')           " Java
+    call dein#add('fatih/vim-go')              " Golang
+    call dein#add('OrangeT/vim-csharp')        " C#
+
+    " Other
+    call dein#add('nathanaelkane/vim-indent-guides')    " visually displaying indent levels
+    call dein#add('thinca/vim-quickrun')
+    call dein#add('vim-airline/vim-airline')            " vim airline
+    call dein#add('vim-airline/vim-airline-themes')     " vim airline
+    call dein#add('ervandew/supertab')                  " allows you to use <Tab> for all your insert completion needs
+    call dein#add('w0ng/vim-hybrid')
+    call dein#add('Shougo/unite-outline')
+    call dein#add('scrooloose/nerdtree')
+    call dein#add('tpope/vim-fugitive')
+    call dein#add('altercation/vim-colors-solarized')
+    call dein#add('t9md/vim-quickhl')
+    call dein#add('Shougo/unite.vim')
+    call dein#add('hokaccha/vim-html5validator')
+    call dein#add('kannokanno/previm')
+    call dein#add('tyru/open-browser.vim')
+    call dein#add('alpaca-tc/alpaca_powertabline')
+    call dein#add('Lokaltog/powerline-fontpatcher')
+
+call dein#end()
+call dein#save_state()
 endif
 
-call neobundle#begin(expand('~/.vim/bundle/'))
+if dein#check_install()
+    call dein#install()
+endif
 
-NeoBundleFetch 'Shougo/neobundle.vim'
-NeoBundleLazy 'mxw/vim-jsx', {'autoload': {'filetypes': ['javascript']}}
-NeoBundleLazy 'pangloss/vim-javascript', {'autoload': {'filetypes': ['javascript']}}
-NeoBundle 'davidhalter/jedi-vim'
-NeoBundle 'thinca/vim-quickrun'
-NeoBundle 'nvie/vim-flake8'
-NeoBundle 'nathanaelkane/vim-indent-guides'
-NeoBundle 'elixir-lang/vim-elixir'
-NeoBundle 'othree/yajs.vim'
-NeoBundle 'plasticboy/vim-markdown'
-NeoBundle 'kannokanno/previm'
-NeoBundle 'tyru/open-browser.vim'
-NeoBundle 'jimenezrick/vimerl'
-NeoBundle 'tpope/vim-pathogen'
-NeoBundle 'fatih/vim-go'
-NeoBundle 'w0ng/vim-hybrid'
-NeoBundle 'Shougo/neocomplete.vim'
-NeoBundle 'Shougo/unite.vim'
-NeoBundle 'Shougo/neosnippet'
-NeoBundle 'Shougo/neosnippet-snippets'
-NeoBundleLazy 'kana/vim-altr'
-NeoBundle 'Shougo/unite-outline'
-NeoBundle 'scrooloose/nerdtree'
-NeoBundle 'tpope/vim-fugitive'
-NeoBundle "t9md/vim-quickhl"
-NeoBundle 'ervandew/supertab'
-NeoBundle 'altercation/vim-colors-solarized'
-NeoBundle 'Shougo/neomru.vim'
-NeoBundle 'bling/vim-airline'
-NeoBundleLazy 'nosami/Omnisharp', {
-\   'autoload': {'filetypes': ['cs']},
-\   'build': {
-\     'windows': 'MSBuild.exe server/OmniSharp.sln /p:Platform="Any CPU"',
-\     'mac': 'xbuild server/OmniSharp.sln',
-\     'unix': 'xbuild server/OmniSharp.sln',
-\   }
-\ }
-NeoBundle 'alpaca-tc/alpaca_powertabline'
-NeoBundle 'Lokaltog/powerline', { 'rtp' : 'powerline/bindings/vim'}
-NeoBundle 'Lokaltog/powerline-fontpatcher'
-NeoBundle 'ryo33/powerful-type.vim'
-call neobundle#end()
+"NeoBundle
+"NeoBundle 'Lokaltog/powerline', { 'rtp' : 'powerline/bindings/vim'}
 
 let g:SuperTabDefaultCompletionType = "context"
 set nocompatible
@@ -70,8 +72,6 @@ xmap <Space>M <Plug>(quickhl-manual-reset)
 " Required:
 filetype plugin indent on
 
-NeoBundleCheck
-"/NeoBundle
 :let erlang_force_use_vimerl_indent = 0
 autocmd FileType erlang setl tabstop=8 expandtab shiftwidth=2 softtabstop=2
 autocmd FileType go setl tabstop=4 expandtab shiftwidth=4 softtabstop=4
@@ -143,12 +143,8 @@ autocmd FileType python setl autoindent
 autocmd FileType python setl smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class
 autocmd FileType python setl tabstop=8 expandtab shiftwidth=4 softtabstop=4
 autocmd FileType python setlocal completeopt-=preview
-
 autocmd FileType javascript.jsx setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
-
 autocmd FileType c++.cpp setl tabstop=4 expandtab shiftwidth=4 softtabstop=4
-
-
 filetype indent plugin on
 set tabstop=4
 set expandtab
@@ -157,10 +153,10 @@ set shiftwidth=4
 filetype indent on
 
 augroup MyXML
- autocmd!
- autocmd Filetype xml inoremap <buffer> </ </<C-x><C-o>
- autocmd Filetype html inoremap <buffer> </ </<C-x><C-o>
- autocmd Filetype eruby inoremap <buffer> </ </<C-x><C-o>
+    autocmd!
+    autocmd Filetype xml inoremap <buffer> </ </<C-x><C-o>
+    autocmd Filetype html inoremap <buffer> </ </<C-x><C-o>
+    autocmd Filetype eruby inoremap <buffer> </ </<C-x><C-o>
 augroup END
 
 let g:indent_guides_enable_on_vim_startup=1
