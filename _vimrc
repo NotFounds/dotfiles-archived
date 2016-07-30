@@ -11,7 +11,6 @@ call dein#add('Shougo/vimproc.vim', {'build': 'make'})
 
 call dein#add('Shougo/neocomplete.vim')
 call dein#add('Shougo/neomru.vim')
-call dein#add('Shougo/neosnippet')
 
 " Languages
 call dein#add('davidhalter/jedi-vim')      " Python
