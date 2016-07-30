@@ -84,6 +84,7 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh
 alias g="git"
+alias gc="git commit"
 alias gcho="git checkout"
 alias gs="git status"
 alias gl="git log"
@@ -93,11 +94,11 @@ alias gba="git branch -a"
 alias gsbg="git show-branch | grep '*' | grep -v "$(git rev-parse --abbrev-ref HEAD)" | head -1 | awk -F'[]~^[]' '{print $2}'"
 alias glog="git log --graph --relative-date --oneline"
 alias glogn="git log --graph --name-status --pretty=format:'%C(red)%h %C(green)%an %Creset%s %C(yellow)%d%Creset'"
-alias gls="git log -p"
+alias glp="git log -p"
 alias gls="git log --stat"
 alias diff='colordiff -u'
 function restart(){
-	exec $SHELL -l
+    exec $SHELL -l
 }
 alias pandoc_html="pandoc -mathml -s --self-contained -t html5 -c github.css $@"
 
