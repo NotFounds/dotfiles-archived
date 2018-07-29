@@ -9,18 +9,20 @@ call dein#begin(expand('~/.vim/dein'))
 call dein#add('Shougo/dein.vim')
 call dein#add('Shougo/vimproc.vim', {'build': 'make'})
 
-call dein#add('Shougo/neocomplete.vim')
+call dein#add('Shougo/neocomplete.vim')             " Completion
 call dein#add('Shougo/neomru.vim')
 
 " Languages
-call dein#add('davidhalter/jedi-vim')      " Python
-call dein#add('nvie/vim-flake8')           " Python
-call dein#add('elixir-lang/vim-elixir')    " Elixir
-call dein#add('plasticboy/vim-markdown')   " Markdown
-call dein#add('jimenezrick/vimerl')        " Erlang
-call dein#add('othree/yajs.vim')           " Java
-call dein#add('fatih/vim-go')              " Golang
-call dein#add('OrangeT/vim-csharp')        " C#
+call dein#add('davidhalter/jedi-vim')               " Python
+call dein#add('nvie/vim-flake8')                    " Python
+call dein#add('elixir-lang/vim-elixir')             " Elixir
+call dein#add('plasticboy/vim-markdown')            " Markdown
+call dein#add('jimenezrick/vimerl')                 " Erlang
+call dein#add('othree/yajs.vim')                    " Java
+call dein#add('fatih/vim-go')                       " Golang
+call dein#add('OrangeT/vim-csharp')                 " C#
+call dein#add('pangloss/vim-javascript')            " Javascript
+call dein#add('mxw/vim-jsx')                        " Jsx
 
 " Other
 call dein#add('nathanaelkane/vim-indent-guides')    " visually displaying indent levels
@@ -40,7 +42,13 @@ call dein#add('kannokanno/previm')
 call dein#add('tyru/open-browser.vim')
 call dein#add('alpaca-tc/alpaca_powertabline')
 call dein#add('Lokaltog/powerline-fontpatcher')
-call dein#add('w0ng/vim-hybrid')
+call dein#add('airblade/vim-gitgutter')             " display git-diff
+call dein#add('tpope/vim-obsession')                " save session
+call dein#add('Konfekt/FastFold')
+
+"gist.vim
+call dein#add('mattn/gist-vim', {'depends': 'mattn/webapi-vim'})
+call dein#add('mattn/webapi-vim')
 
 call dein#end()
 
@@ -48,12 +56,11 @@ if dein#check_install()
     call dein#install()
 endif
 
-"NeoBundle
-"NeoBundle 'Lokaltog/powerline', { 'rtp' : 'powerline/bindings/vim'}
+"gist.vim
+let g:gist_detect_filetype=1
 
 let g:SuperTabDefaultCompletionType = "context"
 set nocompatible
-"set statusline+=%{fugitive#statusline()}
 
 " -- AirLine --
 let g:airline_powerline_fonts = 1
@@ -72,23 +79,16 @@ filetype plugin indent on
 autocmd FileType erlang setl tabstop=8 expandtab shiftwidth=2 softtabstop=2
 autocmd FileType go setl tabstop=4 expandtab shiftwidth=4 softtabstop=4
 
-" -- Solarized --
-"set t_Co=256
-"let g:solarized_termtrans=1
-"let g:solarized_termcolors=256 "16
-"let g:solarized_bold=1
-"let g:solarized_underline=1
-"let g:solarized_italic=1
-"let g:solarized_contrast='normal'
-"let g:solarized_visibility='normal'
+" display histories of command
+set wildmenu
+set history=5000
 
-colorscheme hybrid
-
+" syntax highlight
 syntax on
+colorscheme hybrid
 set background=dark
-"let g:solarized_termtrans = 1
-"colorscheme solarized
 
+" other
 au BufRead,BufNewFile *.md set filetype=markdown
 let g:previm_open_cmd = 'open -a "Google Chrome"'
 
@@ -104,10 +104,10 @@ nnoremap <silent> ,ur :<C-u>Unite -buffer-name=register register<CR>
 nnoremap <silent> ,uu :<C-u>Unite file_mru buffer<CR>
 nnoremap <silent> ,tabe :<C-u>tabe<CR>:<C-u>UniteWithBufferDir -buffer-name=files file<CR>
 nnoremap <silent><C-e> :NERDTreeToggle<CR>
+
 "vim-altr
 nnoremap <Leader>h <Plug>(altr-forward)
 
-syntax on
 set encoding=utf8
 set fileencoding=utf-8
 set scrolloff=5
@@ -126,19 +126,22 @@ set nocompatible
 set nostartofline
 set matchpairs& matchpairs+=<:>
 set showmatch
-set matchtime=3
+set matchtime=2
 set textwidth=0
 set listchars=tab:»-,trail:-,extends:»,precedes:«,nbsp:%,eol:↲
 set virtualedit=all
 set cursorline
 set laststatus=2
+set timeout ttimeoutlen=50
 set guifont=Menlo\ for\ Powerline:h15
 hi clear CursorLine
+
+autocmd BufWritePre * :%s/\s\+$//ge
 
 autocmd FileType python setl autoindent
 autocmd FileType python setl smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class
 autocmd FileType python setl tabstop=8 expandtab shiftwidth=4 softtabstop=4
-autocmd FileType python setlocal completeopt-=preview
+autocmd FileType python setl completeopt-=preview
 autocmd FileType javascript.jsx setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
 autocmd FileType c++.cpp setl tabstop=4 expandtab shiftwidth=4 softtabstop=4
 filetype indent plugin on
@@ -165,3 +168,5 @@ let g:jedi#rename_command = '<Leader>R'
 autocmd BufNewFile,BufRead *.es6 set filetype=javascript
 autocmd BufNewFile,BufRead *.js set filetype=javascript.jsx
 autocmd BufNewFile,BufRead *.jsx set filetype=javascript.jsx
+
+vnoremap <silent> <C-p> "0p<CR>
