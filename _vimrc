@@ -130,7 +130,7 @@ set matchtime=2
 set textwidth=0
 set listchars=tab:»-,trail:-,extends:»,precedes:«,nbsp:%,eol:↲
 set virtualedit=all
-set cursorline
+"set cursorline
 set laststatus=2
 set timeout ttimeoutlen=50
 set guifont=Menlo\ for\ Powerline:h15
