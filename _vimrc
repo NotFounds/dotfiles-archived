@@ -13,7 +13,6 @@ call dein#add('Shougo/neocomplete.vim')             " Completion
 call dein#add('Shougo/neomru.vim')
 
 " Languages
-call dein#add('davidhalter/jedi-vim')               " Python
 call dein#add('nvie/vim-flake8')                    " Python
 call dein#add('elixir-lang/vim-elixir')             " Elixir
 call dein#add('plasticboy/vim-markdown')            " Markdown
@@ -23,6 +22,7 @@ call dein#add('fatih/vim-go')                       " Golang
 call dein#add('OrangeT/vim-csharp')                 " C#
 call dein#add('pangloss/vim-javascript')            " Javascript
 call dein#add('mxw/vim-jsx')                        " Jsx
+call dein#add('leafgarland/typescript-vim')         " TypeScript
 
 " Other
 call dein#add('nathanaelkane/vim-indent-guides')    " visually displaying indent levels
@@ -67,11 +67,6 @@ let g:airline_powerline_fonts = 1
 let g:Powerline_symbol = 'fancy'
 let g:airline_theme='papercolor'
 
-nmap <Space>m <Plug>(quickhl-manual-this)
-xmap <Space>m <Plug>(quickhl-manual-this)
-nmap <Space>M <Plug>(quickhl-manual-reset)
-xmap <Space>M <Plug>(quickhl-manual-reset)
-
 " Required:
 filetype plugin indent on
 
@@ -104,9 +99,6 @@ nnoremap <silent> ,ur :<C-u>Unite -buffer-name=register register<CR>
 nnoremap <silent> ,uu :<C-u>Unite file_mru buffer<CR>
 nnoremap <silent> ,tabe :<C-u>tabe<CR>:<C-u>UniteWithBufferDir -buffer-name=files file<CR>
 nnoremap <silent><C-e> :NERDTreeToggle<CR>
-
-"vim-altr
-nnoremap <Leader>h <Plug>(altr-forward)
 
 set encoding=utf8
 set fileencoding=utf-8
@@ -144,6 +136,7 @@ autocmd FileType python setl tabstop=8 expandtab shiftwidth=4 softtabstop=4
 autocmd FileType python setl completeopt-=preview
 autocmd FileType javascript.jsx setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
 autocmd FileType c++.cpp setl tabstop=4 expandtab shiftwidth=4 softtabstop=4
+autocmd FileType ruby setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
 filetype indent plugin on
 set tabstop=4
 set expandtab
@@ -170,3 +163,36 @@ autocmd BufNewFile,BufRead *.js set filetype=javascript.jsx
 autocmd BufNewFile,BufRead *.jsx set filetype=javascript.jsx
 
 vnoremap <silent> <C-p> "0p<CR>
+inoremap <silent> jj <ESC>
+nnoremap Y y$
+
+let mapleader = "\<Space>"
+
+" save file
+nnoremap <Leader>w :w<CR>
+nnoremap <Leader>x :x<CR>
+
+"vim-altr
+nnoremap <Leader>h <Plug>(altr-forward)
+
+" surround
+nnoremap <Leader>" ciw""<Esc>P
+nnoremap <Leader>' ciw''<Esc>P
+nnoremap <Leader>` ciw``<Esc>P
+nnoremap <Leader>( ciw()<Esc>P
+nnoremap <Leader>{ ciw{}<Esc>P
+nnoremap <Leader>[ ciw[]<Esc>P
+
+" quickhl
+nmap <Leader>m <Plug>(quickhl-manual-this)
+xmap <Leader>m <Plug>(quickhl-manual-this)
+nmap <Leader>M <Plug>(quickhl-manual-reset)
+xmap <Leader>M <Plug>(quickhl-manual-reset)
+
+" moving in normal mode
+imap <C-H> <Left>
+imap <C-J> <Down>
+imap <C-K> <Up>
+imap <C-L> <Right>
+
+set rtp+=/usr/local/opt/fzf

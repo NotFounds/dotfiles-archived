@@ -1,15 +1,16 @@
 # Path to your oh-my-zsh installation.
 export ZSH=/Users/ikedaiori/.oh-my-zsh
 export GOPATH=~/go
-export PATH=$PATH:/usr/bin/node:./:$GOPATH/bin:.:~/sh/:~/sh/git-foresta
+export PATH=$PATH:./:$GOPATH/bin:.:~/sh/:~/sh/git-foresta
 export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
 export PYENV_ROOT="${HOME}/.pyenv"
 export PATH="${PYENV_ROOT}/bin:$PATH"
 eval "$(pyenv init -)"
 export PGDATA=/usr/local/var/postgres
 export JAVA_HOME=`/usr/libexec/java_home`
-export PATH=$HOME/.rbenv/bin:$PATH
-eval "$(rbenv init -)"
+#find -exec sh -c "echo {} | awk '{cnt = gsub(/\//, \"\", \$0)} END {print cnt \" \" \$1}'" {} \;
+export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow'
+export FZF_DEFAULT_OPTS='--height 50% --reverse --border --ansi --preview "head -100 {}"'
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
@@ -66,7 +67,6 @@ export PATH=$PATH:"/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 # export MANPATH="/usr/local/man:$MANPATH"
 
 source $ZSH/oh-my-zsh.sh
-
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
 
@@ -88,9 +88,6 @@ source $ZSH/oh-my-zsh.sh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
 # For a full list of active aliases, run `alias`.
 #
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh
 alias emacs="echo \"What is Emacs?\"; say \"You must use vim\"; vim"
 alias vi="vim -p"
 alias vim="vim -p"
@@ -98,9 +95,10 @@ alias gf="git-foresta --all --style=10 | less -RS"
 alias gc="git commit"
 alias gcho="git checkout"
 alias gs="git status"
-alias gl="git log"
+alias gl1="git log --stat -1"
+alias gl="git log --stat"
 alias glo="git log --oneline"
-alias gb="git branch"
+alias gb="git branch -vv"
 alias gsbg="git show-branch | grep '*' | grep -v "$(git rev-parse --abbrev-ref HEAD)" | head -1 | awk -F'[]~^[]' '{print $2}'"
 alias glog="git log --graph --relative-date --oneline"
 alias glogn="git log --graph --name-status --pretty=format:'%C(red)%h %C(green)%an %Creset%s %C(yellow)%d%Creset'"
@@ -108,6 +106,7 @@ alias glp="git log -p"
 alias gls="git log --stat"
 alias diff='colordiff -u'
 alias check='say "End Task" || say "Faild Task"'
+alias ip="ifconfig en0 | grep -e 'inet ' | awk '{print \$2}'"
 function restart(){
     exec $SHELL -l
 }
@@ -125,11 +124,14 @@ function do_enter() {
         return 0
     fi
     echo
-    ls
+    ls -lF
     if [ "$(git rev-parse --is-inside-work-tree 2> /dev/null)" = 'true' ]; then
         echo
-        echo -e "\e[0;33m--- git status ---\e[0m"
+        echo -e "\e[0;33m=== git status ===\e[0m"
         git status -sb
+        echo
+        echo -e "\e[0;33m=== git log ===\e[0m"
+        echo `git log --oneline -1`
     fi
     zle reset-prompt
     return 0
@@ -148,3 +150,67 @@ pandoc_md_html () {
  pandoc -f markdown_github+raw_html+fenced_code_attributes-hard_line_breaks --self-contained -s --mathjax -c https://gist.githubusercontent.com/griffin-stewie/9755783/raw/13cf5c04803102d90d2457a39c3a849a2d2cc04b/github.css --template=template.html $@
 }
 PS1="$PS1"'$([ -n "$TMUX" ] && tmux setenv TMUXPWD_$(tmux display -p "#D" | tr -d %) "$PWD")'
+export PATH=$HOME/.rbenv/bin:$PATH
+eval "$(rbenv init -)"
+export PATH="/usr/local/opt/imagemagick@6/bin:$PATH"
+export PATH="$HOME/.nodenv/bin:$PATH"
+export PATH="$HOME/.nodenv/shims:$PATH"
+export PATH=$PATH:`npm bin -g`
+alias notify="osascript -e 'display notification \"Command exit!\" with title \"Terminal\"'"
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/ikedaiori/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/ikedaiori/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/ikedaiori/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/ikedaiori/google-cloud-sdk/completion.zsh.inc'; fi
+
+fshow() {
+    git log --graph --color=always \
+        --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
+        fzf --ansi --no-sort --reverse --tiebreak=index --bind=ctrl-s:toggle-sort \
+        --bind "ctrl-m:execute:
+    (grep -o '[a-f0-9]\{7\}' | head -1 |
+        xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
+    {}
+    FZF-EOF"
+}
+
+# open in vim selected path with fv
+fv() {
+    local path
+    path=$(find ${1:-.} -path '*/\.*' -prune -o -type d -print 2> /dev/null | fzf +m) &&
+    vim "$path"
+}
+
+fadd() {
+  local out q n addfiles
+  while out=$(
+      git status --short |
+      awk '{if (substr($0,2,1) !~ / /) print $2}' |
+      fzf --multi --exit-0 --expect=ctrl-d); do
+    q=$(head -1 <<< "$out")
+    n=$[$(wc -l <<< "$out") - 1]
+    addfiles=(`echo $(tail "-$n" <<< "$out")`)
+    [[ -z "$addfiles" ]] && continue
+    if [ "$q" = ctrl-d ]; then
+      git diff --color=always $addfiles | less -R
+    else
+      git add $addfiles
+    fi
+  done
+}
+
+# ctrl+zでバックグラウンドフォアグランドを切り替える
+fancy-ctrl-z () {
+    if [[ $#BUFFER -eq 0 ]]; then
+        BUFFER="fg"
+        zle accept-line
+    else
+        zle push-input
+        zle clear-screen
+    fi
+}
+zle -N fancy-ctrl-z
+bindkey '^Z' fancy-ctrl-z
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
